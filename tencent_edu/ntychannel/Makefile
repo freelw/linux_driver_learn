@@ -1,4 +1,4 @@
-KERNDIR:=/lib/modules/5.3.0-45-generic/build
+KERNDIR:=/home/wangli/project/linux-4.4.16
 PWD:=$(shell pwd)
 obj-m:=ntychannel.o
 all:
