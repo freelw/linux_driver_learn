@@ -1,4 +1,23 @@
 #include <linux/fs.h>
+
+#ifndef NTYCHANNEL_MAJOR
+#define NTYCHANNEL_MAJOR 96
+#endif
+
+#ifndef NTYCHANNEL_NR_DEVS
+#define NTYCHANNEL_NR_DEVS 2
+#endif
+
+static int channel_major = NTYCHANNEL_MAJOR;
+
+struct cdev cdev;
+
+//private_data
+struct ntychannel {
+    char *data;
+    unsigned long size;
+};
+
 // write
 ssize_t channel_write(struct file *, const char __user *, size_t, loff_t *) {
 
@@ -34,6 +53,21 @@ static const struct file_operations channel_ops = {
 //insmod
 static int voice_channel_init(void) {
 
+    int result;
+    // register
+    dev_t devno = MKDEV(channel_major, 0);
+    result = register_chrdev_region(devno, NTYCHANNEL_NR_DEVS, "ntychannel");
+    if (result < 0) {
+        return result;
+    }
+
+    cdev_init();
+
+    // cdev_init
+
+    // cdev_add
+
+    // malloc private_data
 
 }
 
