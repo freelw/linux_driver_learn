@@ -1,4 +1,4 @@
-
+#include <linux/fs.h>
 // write
 ssize_t channel_write(struct file *, const char __user *, size_t, loff_t *) {
 
@@ -21,11 +21,8 @@ unsigned int channel_poll(struct file *, struct poll_table_struct *) {
 
 }
 
-
-
 // file_operations
-
-static const struct file_operations channel_ops {
+static const struct file_operations channel_ops = {
     .owner = THIS_MODULE,
     .write = channel_write,
     .read = channel_read,
@@ -33,6 +30,7 @@ static const struct file_operations channel_ops {
     .release = channel_release,
     .poll = channel_poll,
 }
+
 //insmod
 static int voice_channel_init(void) {
 
@@ -46,3 +44,4 @@ static void voice_channel_exit(void) {
 
 module_init(voice_channel_init);
 moduel_exit(voice_channel_exit);
+MODULE_LICENSE("GPL");
