@@ -8,6 +8,10 @@
 #define NTYCHANNEL_NR_DEVS 2
 #endif
 
+#ifndef NTYCHANNEL_SIZE
+#define NTYCHANNEL_SIZE 4096
+#endif
+
 static int channel_major = NTYCHANNEL_MAJOR;
 
 struct cdev cdev;
@@ -17,6 +21,8 @@ struct ntychannel {
     char *data;
     unsigned long size;
 };
+
+struct ntychannel *channel_devp;
 
 // write
 ssize_t channel_write(struct file *, const char __user *, size_t, loff_t *) {
@@ -61,14 +67,27 @@ static int voice_channel_init(void) {
         return result;
     }
 
-    cdev_init();
-
     // cdev_init
+    cdev_init(&cdev, &channel_ops);
 
     // cdev_add
+    cdev_add(&cdev, devno, NTYCHANNEL_NR_DEVS);
 
     // malloc private_data
+    channel_devp = kmalloc(NTYCHANNEL_NR_DEVS * sizeof(ntychannel), GFP_KERNEL);
+    if (!channel_devp) {
+        result = -ENOMEM;
+        goto fail_malloc:
+    }
+    for (int i = 0; i < NTYCHANNEL_NR_DEVS; ++ i) {
+        channel_devp[i].size = NTYCHANNEL_SIZE;
+        channel_devp[i].data = kmalloc(NTYCHANNEL_SIZE, GFP_KERNEL);
+        memset(channel_devp[i].data, 0, NTYCHANNEL_SIZE);
+    }
+    printk(KERN_INFO "ntychannel_init");
 
+fail_malloc:
+    unregister_chrdev_region(devno, NTYCHANNEL_NR_DEVS);
 }
 
 //rmmod
