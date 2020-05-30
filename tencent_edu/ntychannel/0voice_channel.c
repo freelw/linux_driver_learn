@@ -13,24 +13,68 @@
 #endif
 
 static int channel_major = NTYCHANNEL_MAJOR;
-
 struct cdev cdev;
+
+#define ENABLE_POLL 1
 
 //private_data
 struct ntychannel {
     char *data;
     unsigned long size;
+#if ENABLE_POLL
+    wait_queue_head_t inq;
+#endif 
 };
+#if ENABLE_POLL
+int have_data = 0;
+#endif 
 
 struct ntychannel *channel_devp;
 
 // write
-ssize_t channel_write(struct file *, const char __user *, size_t, loff_t *) {
- 
+ssize_t channel_write(struct file * filp, const char __user *buffer, size_t size, loff_t *ppos) {
+    // copy buffer to channel private data
+    int ret = 0;
+    long long p = *ppos;
+    unsigned int count = size;
+    struct ntychannel *channel = filp->private_data;
+    if (p >= NTYCHANNEL_SIZE) {
+        return -1;
+    }
+    if (count + p > NTYCHANNEL_SIZE) {
+        count = NTYCHANNEL_SIZE - p;
+    }
+    if (copy_from_user(channel->data + p, buffer, count)) {
+        return -EFAULT;
+    } else {
+        *ppos += count;
+        ret = count;
+        channel->size += count;
+        *(channel->data + p + count) = '\0';
+        printk(KERN_INFO "written %d byte(s) from %ld\n", count, p);
+    }
+    return ret;
 }
 // read
-ssize_t channel_read(struct file *, char __user *, size_t, loff_t *) {
-
+ssize_t channel_read(struct file * filp, const char __user *buffer, size_t size, loff_t *ppos) {
+    int ret = 0;
+    long long p = *ppos;
+    unsigned int count = size;
+    struct ntychannel *channel = filp->private_data;
+    if (p >= NTYCHANNEL_SIZE) {
+        return -1;
+    }
+    if (count + p > NTYCHANNEL_SIZE) {
+        count = NTYCHANNEL_SIZE - p;
+    }
+    if (copy_to_user(buffer, (channel->data+p), count)) {
+        return - EFAULT;
+    } else {
+        ret = strlen(buffer);
+        channel->size -= ret;
+        printk(KERN_INFO "read %d byte(s) from %ld\n", ret, p);
+    }
+    return ret;
 }
 
 // open
@@ -87,13 +131,13 @@ static int voice_channel_init(void) {
         goto fail_malloc:
     }
     for (int i = 0; i < NTYCHANNEL_NR_DEVS; ++ i) {
-        channel_devp[i].size = NTYCHANNEL_SIZE;
+        channel_devp[i].size = 0;
         channel_devp[i].data = kmalloc(NTYCHANNEL_SIZE, GFP_KERNEL);
         memset(channel_devp[i].data, 0, NTYCHANNEL_SIZE);
     }
     printk(KERN_INFO "ntychannel_init");
     return 0;
-    
+
 fail_malloc:
     unregister_chrdev_region(devno, NTYCHANNEL_NR_DEVS);
     return -1;
