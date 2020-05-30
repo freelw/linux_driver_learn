@@ -26,7 +26,7 @@ struct ntychannel *channel_devp;
 
 // write
 ssize_t channel_write(struct file *, const char __user *, size_t, loff_t *) {
-
+ 
 }
 // read
 ssize_t channel_read(struct file *, char __user *, size_t, loff_t *) {
@@ -34,11 +34,18 @@ ssize_t channel_read(struct file *, char __user *, size_t, loff_t *) {
 }
 
 // open
-int channel_open(struct inode *, struct file *) {
-
+int channel_open(struct inode *inode, struct file *filp) {
+    int num = MINOR(inde->i_rdev);
+    if (num >= channel_devp) {
+        return -ENODEV;
+    }
+    filp->private_data = &channel_devp[num];
+    return 0;
 }
+
 // close
-int channel_release(struct inode *, struct file *) {
+int channel_release(struct inode *inode, struct file *filp) {
+    
 
 }
 // poll
@@ -85,14 +92,23 @@ static int voice_channel_init(void) {
         memset(channel_devp[i].data, 0, NTYCHANNEL_SIZE);
     }
     printk(KERN_INFO "ntychannel_init");
-
+    return 0;
+    
 fail_malloc:
     unregister_chrdev_region(devno, NTYCHANNEL_NR_DEVS);
+    return -1;
 }
 
 //rmmod
 static void voice_channel_exit(void) {
-
+    for (int i = 0; i < NTYCHANNEL_NR_DEVS; ++ i) {
+        kfree(channel_devp[i].data);
+    }
+    kfree(channel_devp);
+    cdev_del(&dev);
+    dev_t devno = MKDEV(channel_major, 0);
+    unregister_chrdev_region(devno, NTYCHANNEL_NR_DEVS);
+    printk(KERN_INFO "channel_release");
 }
 
 module_init(voice_channel_init);
