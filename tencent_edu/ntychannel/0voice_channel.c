@@ -130,7 +130,7 @@ static int voice_channel_init(void) {
     cdev_add(&cdev, devno, NTYCHANNEL_NR_DEVS);
 
     // malloc private_data
-    channel_devp = kmalloc(NTYCHANNEL_NR_DEVS * sizeof(ntychannel), GFP_KERNEL);
+    channel_devp = kmalloc(NTYCHANNEL_NR_DEVS * sizeof(struct ntychannel), GFP_KERNEL);
     if (!channel_devp) {
         result = -ENOMEM;
         goto fail_malloc:
