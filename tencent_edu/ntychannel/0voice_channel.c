@@ -156,7 +156,7 @@ static void voice_channel_exit(void) {
         kfree(channel_devp[i].data);
     }
     kfree(channel_devp);
-    cdev_del(&dev);
+    cdev_del(&cdev);
     dev_t devno = MKDEV(channel_major, 0);
     unregister_chrdev_region(devno, NTYCHANNEL_NR_DEVS);
     printk(KERN_INFO "channel_release");
