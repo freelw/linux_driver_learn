@@ -97,8 +97,8 @@ int channel_release(struct inode *inode, struct file *filp) {
 
 }
 // poll
-unsigned int channel_poll(struct file *, struct poll_table_struct *) {
-
+unsigned int channel_poll(struct file *filp, struct poll_table_struct *wait) {
+    
 }
 
 // file_operations
