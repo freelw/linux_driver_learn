@@ -71,7 +71,7 @@ ssize_t channel_read(struct file * filp, const char __user *buffer, size_t size,
     if (count + p > NTYCHANNEL_SIZE) {
         count = NTYCHANNEL_SIZE - p;
     }
-    if (copy_to_user(buffer, (channel->data+p), count)) {
+    if (copy_to_user(buffer, (void *)(channel->data+p), count)) {
         return - EFAULT;
     } else {
         ret = strlen(buffer);
