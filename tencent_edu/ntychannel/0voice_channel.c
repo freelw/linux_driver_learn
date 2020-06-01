@@ -39,7 +39,7 @@ struct ntychannel *channel_devp;
 ssize_t channel_write(struct file * filp, const char __user *buffer, size_t size, loff_t *ppos) {
     // copy buffer to channel private data
     int ret = 0;
-    long long p = *ppos;
+    unsigned long p = *ppos;
     unsigned int count = size;
     struct ntychannel *channel = filp->private_data;
     if (p >= NTYCHANNEL_SIZE) {
@@ -62,7 +62,7 @@ ssize_t channel_write(struct file * filp, const char __user *buffer, size_t size
 // read
 ssize_t channel_read(struct file * filp, const char __user *buffer, size_t size, loff_t *ppos) {
     int ret = 0;
-    long long p = *ppos;
+    unsigned long p = *ppos;
     unsigned int count = size;
     struct ntychannel *channel = filp->private_data;
     if (p >= NTYCHANNEL_SIZE) {
