@@ -163,5 +163,5 @@ static void voice_channel_exit(void) {
 }
 
 module_init(voice_channel_init);
-moduel_exit(voice_channel_exit);
+module_exit(voice_channel_exit);
 MODULE_LICENSE("GPL");
