@@ -116,6 +116,7 @@ static const struct file_operations channel_ops = {
 static int voice_channel_init(void) {
 
     int result;
+    int i;
     // register
     dev_t devno = MKDEV(channel_major, 0);
     result = register_chrdev_region(devno, NTYCHANNEL_NR_DEVS, "ntychannel");
@@ -135,7 +136,7 @@ static int voice_channel_init(void) {
         result = -ENOMEM;
         goto fail_malloc;
     }
-    for (int i = 0; i < NTYCHANNEL_NR_DEVS; ++ i) {
+    for (i = 0; i < NTYCHANNEL_NR_DEVS; ++ i) {
         channel_devp[i].size = 0;
         channel_devp[i].data = kmalloc(NTYCHANNEL_SIZE, GFP_KERNEL);
         memset(channel_devp[i].data, 0, NTYCHANNEL_SIZE);
@@ -150,7 +151,8 @@ fail_malloc:
 
 //rmmod
 static void voice_channel_exit(void) {
-    for (int i = 0; i < NTYCHANNEL_NR_DEVS; ++ i) {
+    int i;
+    for (i = 0; i < NTYCHANNEL_NR_DEVS; ++ i) {
         kfree(channel_devp[i].data);
     }
     kfree(channel_devp);
