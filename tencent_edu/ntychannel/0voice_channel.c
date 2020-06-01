@@ -109,7 +109,7 @@ static const struct file_operations channel_ops = {
     .open = channel_open,
     .release = channel_release,
     .poll = channel_poll,
-}
+};
 
 //insmod
 static int voice_channel_init(void) {
