@@ -2,6 +2,7 @@
 #include <linux/module.h>
 #include <linux/cdev.h>
 #include <linux/fs.h>
+#include <asm/uaccess.h>
 
 #ifndef NTYCHANNEL_MAJOR
 #define NTYCHANNEL_MAJOR 96
