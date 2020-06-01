@@ -83,7 +83,7 @@ ssize_t channel_read(struct file * filp, const char __user *buffer, size_t size,
 
 // open
 int channel_open(struct inode *inode, struct file *filp) {
-    int num = MINOR(inde->i_rdev);
+    int num = MINOR(inode->i_rdev);
     if (num >= channel_devp) {
         return -ENODEV;
     }
