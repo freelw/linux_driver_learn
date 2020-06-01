@@ -133,7 +133,7 @@ static int voice_channel_init(void) {
     channel_devp = kmalloc(NTYCHANNEL_NR_DEVS * sizeof(struct ntychannel), GFP_KERNEL);
     if (!channel_devp) {
         result = -ENOMEM;
-        goto fail_malloc:
+        goto fail_malloc;
     }
     for (int i = 0; i < NTYCHANNEL_NR_DEVS; ++ i) {
         channel_devp[i].size = 0;
