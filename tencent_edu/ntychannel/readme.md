@@ -1,5 +1,9 @@
 查看我的腾讯课堂
 
+内核版本号
+wangli@ubuntu:~$ uname -r
+4.4.16
+
 如何测试
 1. 在ntychannel文件夹下 make
 2. 创建设备文件
