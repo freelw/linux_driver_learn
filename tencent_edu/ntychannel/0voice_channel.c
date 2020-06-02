@@ -61,7 +61,7 @@ ssize_t channel_write(struct file * filp, const char __user *buffer, size_t size
 
 #if ENABLE_POLL
     have_data = 1;
-    wake_up(&channe->inq);
+    wake_up(&channel->inq);
 #endif
     return ret;
     
