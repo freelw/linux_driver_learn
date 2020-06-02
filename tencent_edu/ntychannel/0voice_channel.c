@@ -167,7 +167,7 @@ static int voice_channel_init(void) {
         init_waitqueue_head(&channel_devp[i].inq);
 #endif
     }
-    printk(KERN_INFO "ntychannel_init");
+    printk(KERN_INFO "voice_channel_init");
     return 0;
 
 fail_malloc:
@@ -185,7 +185,7 @@ static void voice_channel_exit(void) {
     cdev_del(&cdev);
     dev_t devno = MKDEV(channel_major, 0);
     unregister_chrdev_region(devno, NTYCHANNEL_NR_DEVS);
-    printk(KERN_INFO "channel_release");
+    printk(KERN_INFO "voice_channel_exit");
 }
 
 module_init(voice_channel_init);
