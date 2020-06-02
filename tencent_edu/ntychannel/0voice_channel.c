@@ -116,7 +116,13 @@ int channel_release(struct inode *inode, struct file *filp) {
 }
 // poll
 unsigned int channel_poll(struct file *filp, struct poll_table_struct *wait) {
-    
+    struct ntychannel *channel = filp->private_data;
+    unsigned int mask = 0;
+    poll_wait(filp, channel->inq, wait);
+    if (have_data) {
+        mask |= POLL_IN;
+    }
+    return mask;
 }
 
 // file_operations
@@ -157,6 +163,9 @@ static int voice_channel_init(void) {
         channel_devp[i].size = 0;
         channel_devp[i].data = kmalloc(NTYCHANNEL_SIZE, GFP_KERNEL);
         memset(channel_devp[i].data, 0, NTYCHANNEL_SIZE);
+#if ENABLE_POLL
+        init_waitqueue_head(&channel_devp[i].inq);
+#endif
     }
     printk(KERN_INFO "ntychannel_init");
     return 0;
