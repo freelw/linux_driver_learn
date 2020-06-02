@@ -112,8 +112,7 @@ int channel_open(struct inode *inode, struct file *filp) {
 
 // close
 int channel_release(struct inode *inode, struct file *filp) {
-    
-
+    return 0;
 }
 // poll
 unsigned int channel_poll(struct file *filp, struct poll_table_struct *wait) {
