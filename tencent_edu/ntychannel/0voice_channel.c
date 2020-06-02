@@ -119,7 +119,7 @@ int channel_release(struct inode *inode, struct file *filp) {
 unsigned int channel_poll(struct file *filp, struct poll_table_struct *wait) {
     struct ntychannel *channel = filp->private_data;
     unsigned int mask = 0;
-    poll_wait(filp, channel->inq, wait);
+    poll_wait(filp, &channel->inq, wait);
     if (have_data) {
         mask |= POLL_IN;
     }
