@@ -5,6 +5,7 @@
 #include <asm/uaccess.h>
 #include <linux/slab.h>
 #include <linux/sched.h>
+#include <linux/poll.h>
 
 #ifndef NTYCHANNEL_MAJOR
 #define NTYCHANNEL_MAJOR 96
