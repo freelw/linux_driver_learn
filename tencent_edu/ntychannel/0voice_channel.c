@@ -31,7 +31,7 @@ struct ntychannel {
 #endif 
 };
 #if ENABLE_POLL
-int have_data = 0;
+char have_data = 0;
 #endif 
 
 struct ntychannel *channel_devp;
