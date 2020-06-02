@@ -12,4 +12,5 @@ wangli@ubuntu:~$ uname -r
 4. dmesg 查看是否安装成功
 5. 在ntyusermodetest文件夹下make
 6. 调用channeltest
-7. echo "hello channel" > /dev/ntychannel
+7. chmod 666 /dev/ntychannel
+8. echo "hello channel" > /dev/ntychannel

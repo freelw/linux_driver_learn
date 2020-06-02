@@ -7,11 +7,8 @@
 
 #define BUFFER_LENGTH 1024
 int main() {
-
     //open
-
     int fd = open("/dev/ntychannel", O_RDWR);
-
     if (fd < 0) {
         printf("open failed: errno --> %d\n", errno);
         return -1;
