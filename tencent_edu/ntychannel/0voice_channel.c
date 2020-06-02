@@ -58,7 +58,13 @@ ssize_t channel_write(struct file * filp, const char __user *buffer, size_t size
         *(channel->data + p + count) = '\0';
         printk(KERN_INFO "written %d byte(s) from %ld\n", count, p);
     }
+
+#if ENABLE_POLL
+    have_data = 1;
+    wake_up(&channe->inq);
+#endif
     return ret;
+    
 }
 // read
 ssize_t channel_read(struct file * filp, const char __user *buffer, size_t size, loff_t *ppos) {
@@ -72,6 +78,16 @@ ssize_t channel_read(struct file * filp, const char __user *buffer, size_t size,
     if (count + p > NTYCHANNEL_SIZE) {
         count = NTYCHANNEL_SIZE - p;
     }
+
+#if ENABLE_POLL
+    while (!have_data) {
+        if (filp->f_flags & O_NONBLOCK) {
+            return -EAGAIN;
+        }
+        wait_event_interruptible(channel->inq, have_data);
+    }
+#endif
+
     if (copy_to_user(buffer, (void *)(channel->data+p), count)) {
         return - EFAULT;
     } else {
