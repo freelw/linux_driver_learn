@@ -95,6 +95,7 @@ ssize_t channel_read(struct file * filp, const char __user *buffer, size_t size,
     } else {
         ret = strlen(buffer);
         channel->size -= ret;
+        have_data = 0;
         printk(KERN_INFO "read %d byte(s) from %ld\n", ret, p);
     }
     return ret;
