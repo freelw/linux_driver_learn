@@ -1,4 +1,4 @@
 all:
 	gcc -o channeltest main.c
-clean
+clean:
 	rm channeltest
