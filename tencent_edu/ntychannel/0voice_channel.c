@@ -4,6 +4,7 @@
 #include <linux/fs.h>
 #include <asm/uaccess.h>
 #include <linux/slab.h>
+#include <linux/sched.h>
 
 #ifndef NTYCHANNEL_MAJOR
 #define NTYCHANNEL_MAJOR 96
