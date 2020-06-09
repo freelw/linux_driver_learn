@@ -1,11 +1,53 @@
 #include <linux/fs.h>
 
 #define MYFS_MAGIC 0x89898989
+static atomic_t counter;
 
 static struct super_operations myfs_s_ops = {
     .statfs = simple_statfs,
     .drop_inode = generic_delete_inode,
 }
+
+static struct file_operations myfs_file_ops = {
+    .open = myfs_open,
+    .read = myfs_read,
+    .write = myfs_write,
+};
+
+static int myfs_open(struct inode *inode, struct file *filp) {
+    filp->private_data = inode->i_private;
+    return 0;
+}
+
+
+#define TMPSIZE 20
+
+static ssize_t myfs_read(struct file *filp, char *buf, size_t count , loff_t *offset) {
+    atomic_t *counter = (atomic_t *)filp->private_data;
+    int v, len;
+    v = atomic_reead(counter);
+    char tmp[TMPSIZE];
+    atomic_inc(counter);
+
+    len = snprintf(tmp, TMPSIZE, "%d\n", v);
+    if (*offset > len) {
+        return 0;
+    }
+    if (count > len - *offset) {
+        count = len - *offset;
+    }
+    if (copy_to_user(buf, tmp + *offset, count)) {
+        return -EFAULT;
+    }
+    *offset += count;
+    return count;
+}
+
+static ssize_t myfs_write(struct file *filp, const char *buf, size_t count, loff_t *offset) {
+
+    return 0;
+}
+
 
 static struct inode *myfs_make_inode(struct super_block *sb, int mode) {
 
@@ -39,7 +81,7 @@ static struct dentry *myfs_create_file(struct super_block *sb, struct dentry *di
     return dentry;
 }
 
-static atomic_t counter;
+
 static void myfs_create_files(struct super_block *sb, struct dentry *root) {
 
     atomic_set(&counter, 0);
