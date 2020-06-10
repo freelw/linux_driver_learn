@@ -24,7 +24,7 @@ static int myfs_open(struct inode *inode, struct file *filp) {
 static ssize_t myfs_read(struct file *filp, char *buf, size_t count , loff_t *offset) {
     atomic_t *counter = (atomic_t *)filp->private_data;
     int v, len;
-    v = atomic_reead(counter);
+    v = atomic_read(counter);
     char tmp[TMPSIZE];
     atomic_inc(counter);
 
