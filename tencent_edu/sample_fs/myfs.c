@@ -6,7 +6,7 @@ static atomic_t counter;
 static struct super_operations myfs_s_ops = {
     .statfs = simple_statfs,
     .drop_inode = generic_delete_inode,
-}
+};
 
 static int myfs_open(struct inode *inode, struct file *filp) {
     filp->private_data = inode->i_private;
