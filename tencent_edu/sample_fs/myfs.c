@@ -1,4 +1,21 @@
+#include <linux/module.h>
+#include <linux/string.h>
 #include <linux/fs.h>
+#include <linux/time.h>
+#include <linux/slab.h>
+#include <linux/init.h>
+#include <linux/blkdev.h>
+#include <linux/parser.h>
+#include <linux/smp_lock.h>
+#include <linux/buffer_head.h>
+#include <linux/exportfs.h>
+#include <linux/vfs.h>
+#include <linux/random.h>
+#include <linux/mount.h>
+#include <linux/namei.h>
+#include <linux/quotaops.h>
+#include <linux/seq_file.h>
+#include <asm/uaccess.h>
 
 #define MYFS_MAGIC 0x89898989
 static atomic_t counter;
