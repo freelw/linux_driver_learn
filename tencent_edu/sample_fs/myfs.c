@@ -24,8 +24,8 @@ static int myfs_open(struct inode *inode, struct file *filp) {
 static ssize_t myfs_read(struct file *filp, char *buf, size_t count , loff_t *offset) {
     atomic_t *counter = (atomic_t *)filp->private_data;
     int v, len;
-    v = atomic_read(counter);
     char tmp[TMPSIZE];
+    v = atomic_read(counter);
     atomic_inc(counter);
 
     len = snprintf(tmp, TMPSIZE, "%d\n", v);
@@ -58,7 +58,7 @@ static struct inode *myfs_make_inode(struct super_block *sb, int mode) {
     struct inode *ret = new_inode(sb);
     if (ret) {
         ret->imode = mode;
-        ret->i_uid = ret->i_gid = 0;
+        ret->i_uid.val = ret->i_gid.val = 0;
         ret->i_atime = ret->i_mtime = ret->i_ctime = CURRENT_TIME;
     }
     return ret;
