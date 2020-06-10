@@ -3,6 +3,7 @@
 #include <linux/module.h>
 #include <linux/pagemap.h> 	/* PAGE_CACHE_SIZE */
 #include <linux/fs.h>     	/* This is where libfs stuff is declared */
+#include <linux/dcache.h>
 #include <asm/atomic.h>
 #include <asm/uaccess.h>	/* copy_to_user */
 
@@ -100,7 +101,7 @@ static int myfs_fill_super(struct super_block *sb, void *data, int sillent) {
     struct dentry *root_dentry;
 
     sb->s_blocksize = PAGE_CACHE_SIZE;
-    sb->s_blocksize_bits = PAGE_CACHE_SHITF;
+    sb->s_blocksize_bits = PAGE_CACHE_SHIFT;
     sb->s_magic = MYFS_MAGIC;
     sb->s_op = &myfs_s_ops;
 
