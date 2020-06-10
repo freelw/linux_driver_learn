@@ -57,14 +57,14 @@ static struct inode *myfs_make_inode(struct super_block *sb, int mode) {
 
     struct inode *ret = new_inode(sb);
     if (ret) {
-        ret->imode = mode;
+        ret->i_mode = mode;
         ret->i_uid.val = ret->i_gid.val = 0;
         ret->i_atime = ret->i_mtime = ret->i_ctime = CURRENT_TIME;
     }
     return ret;
 }
 
-static struct dentry *myfs_create_file(struct super_block *sb, struct dentry *dir, const char *name atomic_t *counter) {
+static struct dentry *myfs_create_file(struct super_block *sb, struct dentry *dir, const char *name, atomic_t *counter) {
     struct dentry *dentry;
     struct inode *inode;
     struct qstr qname;
