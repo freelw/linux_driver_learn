@@ -111,7 +111,7 @@ static int myfs_fill_super(struct super_block *sb, void *data, int sillent) {
     }
     root->i_op = &simple_dir_inode_operations;
     root->i_fop = &simple_dir_operations;
-    root_dentry = d_alloc_root(root);
+    root_dentry = d_make_root(root);
     if (!root_dentry) {
         goto out_iput;
     }
