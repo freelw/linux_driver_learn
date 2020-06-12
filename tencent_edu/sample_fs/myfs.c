@@ -123,14 +123,14 @@ out:
     return -ENOMEM;
 }
 
-static struct super_block *myfs_get_super(struct file_system_type *fst, int flags, const char *devname, void *data) {
-    return get_sb_single(fst, flags, data, myfs_fill_super);
+struct dentry *myfs_get_super(struct file_system_type *fst, int flags, const char *devname, void *data) {
+    return mount_single(fst, flags, data, myfs_fill_super);
 }
 
 static struct file_system_type myfs_type = {
     .owner = THIS_MODULE,
     .name = "myfs",
-    .get_sb = myfs_get_super,
+    .mount = myfs_get_super,
     .kill_sb = kill_litter_super,
 }
 
