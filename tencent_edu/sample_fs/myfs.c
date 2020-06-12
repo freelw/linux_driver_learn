@@ -132,7 +132,7 @@ static struct file_system_type myfs_type = {
     .name = "myfs",
     .mount = myfs_get_super,
     .kill_sb = kill_litter_super,
-}
+};
 
 static int __init myfs_init(void) {
     return register_filesystem(&myfs_type);
