@@ -122,6 +122,7 @@ static int myfs_fill_super(struct super_block *sb, void *data, int sillent) {
     sb->s_root = root_dentry;
     printk(KERN_INFO "before myfs_create_files\n");
     myfs_create_files(sb, root_dentry);
+    return 0;
 out_iput:
     iput(root);
 out:
