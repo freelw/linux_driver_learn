@@ -94,7 +94,9 @@ out:
 
 static void myfs_create_files(struct super_block *sb, struct dentry *root) {
     atomic_set(&counter, 0);
+    printk(KERN_INFO "myfs_create_file begin\n");
     myfs_create_file(sb, root, "counter", &counter);
+    printk(KERN_INFO "myfs_create_file done\n");
 }
 
 static int myfs_fill_super(struct super_block *sb, void *data, int sillent) {
