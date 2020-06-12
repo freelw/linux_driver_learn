@@ -60,6 +60,7 @@ static struct inode *myfs_make_inode(struct super_block *sb, int mode) {
     if (ret) {
         ret->i_mode = mode;
         ret->i_uid.val = ret->i_gid.val = 0;
+        ret->i_blocks = 0;
         ret->i_atime = ret->i_mtime = ret->i_ctime = CURRENT_TIME;
     }
     return ret;
@@ -105,6 +106,7 @@ static int myfs_fill_super(struct super_block *sb, void *data, int sillent) {
     sb->s_magic = MYFS_MAGIC;
     sb->s_op = &myfs_s_ops;
 
+    printk(KERN_INFO "myfs_fill_super is here\n");
     root = myfs_make_inode(sb, S_IFDIR | 0755);
     if (!root) {
         goto out;
@@ -116,6 +118,7 @@ static int myfs_fill_super(struct super_block *sb, void *data, int sillent) {
         goto out_iput;
     }
     sb->s_root = root_dentry;
+    printk(KERN_INFO "before myfs_create_files\n");
     myfs_create_files(sb, root_dentry);
 out_iput:
     iput(root);
