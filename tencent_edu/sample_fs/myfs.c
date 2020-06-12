@@ -23,7 +23,7 @@ static int myfs_open(struct inode *inode, struct file *filp) {
 #define TMPSIZE 20
 
 static ssize_t myfs_read(struct file *filp, char *buf, size_t count , loff_t *offset) {
-    printk(KERN_INFO "myfs_read begin\n");
+    printk(KERN_INFO "myfs_read begin %d %d\n", count, *offset);
     atomic_t *counter = (atomic_t *)filp->private_data;
     int v, len;
     char tmp[TMPSIZE];
