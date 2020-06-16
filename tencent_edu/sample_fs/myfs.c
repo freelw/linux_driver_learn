@@ -8,7 +8,7 @@
 #include <asm/uaccess.h>	/* copy_to_user */
 
 #define MYFS_MAGIC 0x89898989
-static atomic_t counter;
+static atomic_t counter, subcounter;
 
 static struct super_operations myfs_s_ops = {
     .statfs = simple_statfs,
@@ -92,12 +92,44 @@ out:
     return 0;
 }
 
+static struct dentry * my_create_dir(struct super_block *sb, struct dentry *dir, const char *name) {
+    struct dentry *dentry;
+    struct inode *inode;
+    struct qstr qname;
+    qname.name = name;
+    qname.len = strlen(name);
+    qname.hash = full_name_hash(name, qname.len);
+
+    dentry = d_alloc(dir, &qname);
+    if (!dentry) {
+        goto out;
+    }
+    inode = myfs_make_inode(sb, S_IFDIR | 0644);
+    if (!inode) {
+        goto out_dput;
+    }
+    inode->i_op = &simple_dir_inode_operations;
+    inode->i_fop = &simple_dir_operations;
+    d_add(dentry, inode);
+    return dentry;
+out_dput:
+    dput(dentry);
+out:
+    return 0;
+}
+
 
 static void myfs_create_files(struct super_block *sb, struct dentry *root) {
+    struct dentry *subdir;
     atomic_set(&counter, 0);
     printk(KERN_INFO "myfs_create_file begin\n");
     myfs_create_file(sb, root, "counter", &counter);
     printk(KERN_INFO "myfs_create_file done\n");
+    atomic_set(&subcounter, 0);
+    subdir = my_create_dir(sb, root, "subdir");
+    if (subdir) {
+        myfs_create_file(sb, subdir, "subcounter", &subcounter);
+    }
 }
 
 static int myfs_fill_super(struct super_block *sb, void *data, int sillent) {
