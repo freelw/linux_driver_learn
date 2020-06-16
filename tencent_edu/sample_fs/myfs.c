@@ -45,8 +45,20 @@ static ssize_t myfs_read(struct file *filp, char *buf, size_t count , loff_t *of
 }
 
 static ssize_t myfs_write(struct file *filp, const char *buf, size_t count, loff_t *offset) {
-
-    return 0;
+    atomic_t *counter = (atomic_t *)filp->private_data;
+    char tmp[TMPSIZE];
+    if (*offset != 0) {
+        return -EINVAL;
+    }
+    if (count >= TMPSIZE) {
+        return -EINVAL;
+    }
+    memset(tmp, 0, TMPSIZE);
+    if (copy_from_user(tmp, buf, count)) {
+        return -EFAULT;
+    }
+    atomic_set(counter, simple_strtol(tmp, NULL, 10));
+    return count;
 }
 
 static struct file_operations myfs_file_ops = {
