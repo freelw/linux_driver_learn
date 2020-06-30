@@ -59,6 +59,7 @@ static int __init simple_char_init(void) {
   } 
   printk("succeeded register char device : %s\n", DEMO_NAME);
   printk("Major number = %d, minor number = %d\n", MAJOR(dev), MINOR(dev));
+  return 0;
 cdev_fail:
   cdev_del(demo_cdev);
 unregister_chrdev:
