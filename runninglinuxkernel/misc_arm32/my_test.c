@@ -4,7 +4,7 @@
 #include <linux/init.h>
 #include <linux/miscdevice.h>
 
-#define DEMO_NAME "my_demo_dev"
+#define DEMO_NAME "my_misc_dev"
 
 static struct device *mydemdrv_device;
 
