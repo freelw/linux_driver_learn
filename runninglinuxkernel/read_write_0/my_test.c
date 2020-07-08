@@ -41,7 +41,7 @@ static ssize_t demodrv_read(struct file *file, char __user *buf, size_t lbuf, lo
   }
   actual_readed = need_read - ret;
   *ppos += actual_readed;
-  printk("%s, actual_readed=%d, pos=%d\n", __func__, actual_readed, *ppos);
+  printk("%s, actual_readed=%d, pos=%lld\n", __func__, actual_readed, *ppos);
   return actual_readed;
 }
 
@@ -63,7 +63,7 @@ static ssize_t demodrv_write(struct file *file, const char __user *buf, size_t c
   }
   actual_write = need_write - ret;
   *ppos += actual_write;
-  printk("%s actual_write =%d, ppos=%d\n", __func__, actual_write, *ppos);
+  printk("%s actual_write =%d, ppos=%lld\n", __func__, actual_write, *ppos);
   return actual_write;
 }
 
@@ -91,6 +91,7 @@ static int __init simple_char_init(void) {
   mydemdrv_device = mydemodrv_misc_device.this_device;
   printk("succeeded register misc device: %s\n", DEMO_NAME);
   device_buffer = kmalloc(MAX_DEVICE_BUFFER_SIZE, GFP_KERNEL);
+  memset(device_buffer, 0, MAX_DEVICE_BUFFER_SIZE);
   return 0;
 }
 
